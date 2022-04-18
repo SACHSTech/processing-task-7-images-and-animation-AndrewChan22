@@ -8,10 +8,20 @@ public class Sketch extends PApplet {
   float fltDvdX = random(0, 1000);
   float fltDvdY = random(0, 800);
 
-  // pixels that x and y values increase/decrease by
+  // pixels that x and y values increase/decrease by for Dvd
   float fltSpeedX = 5;
   float fltSpeedY = 5;
-	
+
+  float fltWaveCounter;
+  float fltWaveMovement;
+
+  //circle variables (position and speed)
+  float fltCircleX = random(0, 1000);
+  float fltCircleY = random(0, 800);
+  float circleSpeedX = 10;
+  float circleSpeedY = 10;
+  
+  // dvd colours empty array
   PImage [] dvdColours = new PImage[5];
   int numImages = 5; 
 
@@ -52,33 +62,75 @@ public class Sketch extends PApplet {
     // draw black background
     image(background, 0, 0);
 
+    // draw moving circle
+    ellipse(fltCircleX, fltCircleY, 50, 50);
+
+    fltCircleX += circleSpeedX;
+    fltCircleY += circleSpeedY;
+
+
     // randomly select from a list of dvd colours
     image(dvdColours[randNum], fltDvdX, fltDvdY);
     
-    // animate dvd logo
-    fltDvdX+=fltSpeedX;
-    fltDvdY+=fltSpeedY;
+    // non-linear path for Dvd movement
+    fltWaveCounter += 0.20;
+    fltWaveMovement = (float) (Math.sin(fltWaveCounter) * 5);
 
-    // if dvd logo touches horizontal edge of screen, set X animation motion to be reversed
+    // animate dvd logo
+    fltDvdX += fltSpeedX;
+    fltDvdY += fltSpeedY + fltWaveMovement;
+
+    // circle right X edge detection
+    if (fltCircleX >= (975)) {
+      circleSpeedX = -circleSpeedX;
+      fltCircleX = 975;
+    }
+
+    // circle left X edge detection
+    else if (fltCircleX <= 25) {
+      circleSpeedX = -circleSpeedX;
+      fltCircleX = 25;
+    }
+
+    // circle bottom Y edge detection
+    if (fltCircleY >= 775) {
+      circleSpeedY = -circleSpeedY;
+      fltCircleY = 775;
+    } 
+
+    // circle top Y edge detection
+    else if (fltCircleY <= 0) {
+      circleSpeedY = -circleSpeedY;
+      fltCircleY = 0;
+    }
+
+    // Dvd right X edge detection, reverse X speed if image reaches boundary
     if (fltDvdX >= 553) {
       fltSpeedX = -fltSpeedX;
       fltDvdX = 553; 
+      
       randColour();
       noDuplicates();
       
     } 
 
-    // if dvd logo's is less than or equal to position of x = 0, change X animation motion, and set it in the opposite direction
+    // Dvd left X edge detection, reverse X speed if image reaches boundary
     else if (fltDvdX <= 0) {
       fltSpeedX = -fltSpeedX;
       fltDvdX = 0;
+
       randColour();
       noDuplicates();
     }
 
+    // Dvd bottom Y edge detection, reverse both 
     if (fltDvdY >= 600) {
       fltSpeedY = -fltSpeedY;
       fltDvdY = 600;
+
+      fltWaveMovement = -fltWaveMovement;
+      fltWaveCounter = -fltWaveCounter;
+  
       randColour();
       noDuplicates();
     }
@@ -86,6 +138,10 @@ public class Sketch extends PApplet {
     else if (fltDvdY <= 0) {
       fltSpeedY = -fltSpeedY;
       fltDvdY = 0;
+
+      fltWaveMovement = -fltWaveMovement;
+      fltWaveCounter = -fltWaveCounter;
+      
       randColour();
       noDuplicates();
     }
