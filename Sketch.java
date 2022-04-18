@@ -1,6 +1,10 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/**
+ * Animating images and shapes with edge detection
+ * @author: A. Chan
+ */
 public class Sketch extends PApplet {
 
   PImage background;
